@@ -1,7 +1,14 @@
 package com.nix.config;
 
+import org.glassfish.jersey.servlet.ServletContainer;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.annotation.Priority;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
+@Priority(1)
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
@@ -18,5 +25,21 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.setInitParameter("contextConfigLocation", "NOTNULL");
+
+        super.onStartup(servletContext);
+
+        ServletRegistration.Dynamic servletRegistration = servletContext.addServlet("JerseyServlet",
+                ServletContainer.class.getName());
+        servletRegistration.addMapping("/api/rest/*");
+        servletRegistration.setLoadOnStartup(1);
+        servletRegistration.setInitParameter("javax.ws.rs.Application",
+                JerseyAppConfig.class.getName());
+    }
+
 
 }

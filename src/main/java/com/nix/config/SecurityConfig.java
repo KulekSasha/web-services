@@ -1,25 +1,32 @@
 package com.nix.config;
 
 import com.nix.security.AuthenticationSuccessHandlerImpl;
+import com.nix.security.CustomBasicAuthenticationEntryPoint;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static String REALM = "MY_TEST_REALM";
 
     private UserDetailsService userDetailsService;
 
@@ -36,9 +43,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
+    @Configuration
+    @Order(1)
+    public class ApiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            // @formatter:off
+             http
+                    .antMatcher("/api/**")
+                    .authorizeRequests()
+                    .antMatchers("/api/**").hasRole("ADMIN")
+                    .and()
+                 .httpBasic()
+                    .realmName(REALM)
+                    .authenticationEntryPoint(getBasicAuthEntryPoint())
+                    .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                 .exceptionHandling()
+                     .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            PrintWriter writer = response.getWriter();
+                            writer.println("HTTP Status 403 : " + accessDeniedException.getMessage());
+                            })
+             ;
+            // @formatter:on
+        }
+    }
+
+    @Configuration
+    @Order(2)
+    public class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            // @formatter:off
         http
             .authorizeRequests()
                 .antMatchers("/resources/**", "/", "/login", "/logout",
@@ -57,8 +96,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling()
                 .accessDeniedPage("/access_denied")
                 .and()
-            .csrf().disable();
+            .csrf().disable()
+        ;
         // @formatter:on
+        }
+    }
+
+    @Bean
+    public CustomBasicAuthenticationEntryPoint getBasicAuthEntryPoint() {
+        return new CustomBasicAuthenticationEntryPoint();
     }
 
     @Bean
