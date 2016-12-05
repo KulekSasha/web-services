@@ -81,41 +81,4 @@ public class DaoTestConfig {
         };
     }
 
-//    @Bean
-//    public UserService userService() {
-//        return Mockito.mock(UserServiceImpl.class);
-//    }
-//
-//    @Bean
-//    public RoleService roleService() {
-//        return Mockito.mock(RoleService.class);
-//    }
-//
-//    @Bean
-//    public ReCaptchaImpl reCaptcha() {
-//        return Mockito.mock(ReCaptchaImpl.class);
-//    }
-//
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//
-//        GrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-//        GrantedAuthority userAuthority = new SimpleGrantedAuthority("ROLE_USER");
-//
-//        UserDetails adminUserDetails = new User("adminLogin", "adminPass",
-//                asList(adminAuthority));
-//        UserDetails userUserDetails = new User("userLogin", "userPass",
-//                asList(userAuthority));
-//
-//        return new InMemoryUserDetailsManager(asList(adminUserDetails, userUserDetails));
-//    }
-
-//    @Bean
-//    @Primary
-//    public DaoAuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userDetailsService());
-//        return authenticationProvider;
-//    }
-
 }

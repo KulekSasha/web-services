@@ -35,8 +35,8 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
         ServletRegistration.Dynamic servletRegistration = servletContext.addServlet("JerseyServlet",
                 ServletContainer.class.getName());
-        servletRegistration.addMapping("/api/rest/*");
         servletRegistration.setLoadOnStartup(1);
+        servletRegistration.addMapping("/api/rest/*");
         servletRegistration.setInitParameter("javax.ws.rs.Application",
                 JerseyAppConfig.class.getName());
     }
