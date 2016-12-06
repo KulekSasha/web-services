@@ -1,13 +1,14 @@
 package com.nix.config;
 
-import com.nix.dao.RoleDao;
 import com.nix.dao.UserDao;
-import com.nix.dao.hiber.HRoleDao;
 import com.nix.dao.hiber.HUserDao;
+import com.nix.service.UserService;
+import com.nix.service.impl.UserServiceImpl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -25,15 +26,10 @@ import java.util.Properties;
 @Configuration
 @PropertySource(value = {"classpath:app-test.properties"})
 @EnableTransactionManagement
-public class DaoTestConfig {
+public class UserResourceTestConfig {
 
     @Autowired
     private Environment env;
-
-    @Bean
-    public RoleDao roleDao() {
-        return new HRoleDao(sessionFactory());
-    }
 
     @Bean
     public UserDao userDao() {
@@ -44,7 +40,9 @@ public class DaoTestConfig {
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScript("dbunit-data/schema.sql")
+                .addScript("rest-sql/schema.sql")
+                .addScript("rest-sql/data.sql")
+
                 .ignoreFailedDrops(true)
                 .build();
     }
@@ -84,4 +82,24 @@ public class DaoTestConfig {
         };
     }
 
+    @Bean
+    public UserService userService() {
+        UserService service = new UserServiceImpl(userDao());
+        return service;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        messageSource.setCacheSeconds(60);
+        return messageSource;
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
+        validatorFactoryBean.setValidationMessageSource(messageSource());
+        return validatorFactoryBean;
+    }
 }

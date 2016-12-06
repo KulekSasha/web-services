@@ -67,6 +67,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             PrintWriter writer = response.getWriter();
                             writer.println("HTTP Status 403 : " + accessDeniedException.getMessage());
                             })
+                     .and()
+                 .csrf().disable()
              ;
             // @formatter:on
         }
@@ -96,8 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling()
                 .accessDeniedPage("/access_denied")
                 .and()
-            .csrf().disable()
-        ;
+            .csrf().disable();
         // @formatter:on
         }
     }

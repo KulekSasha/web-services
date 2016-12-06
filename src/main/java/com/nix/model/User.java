@@ -35,7 +35,7 @@ public class User {
     private String login;
 
     @Column(name = "PASSWORD")
-    @NotEmpty
+    @NotEmpty(message = "notEmpty.password")
     @Pattern(regexp = "^[a-zA-Z0-9_-]{5,15}$")
     private String password;
 
@@ -45,11 +45,11 @@ public class User {
     private String email;
 
     @Column(name = "FIRST_NAME")
-    @Length(min = 2, max = 25)
+    @Length(min = 2, max = 25, message = "{user.firstName.length}")
     private String firstName;
 
     @Column(name = "LAST_NAME")
-    @Length(min = 2, max = 25)
+    @Length(min = 2, max = 25, message = "{user.lastName.length}")
     private String lastName;
 
     @Column(name = "BIRTHDAY")

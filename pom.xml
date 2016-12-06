@@ -127,6 +127,12 @@
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-bean-validation</artifactId>
             <version>${jersey.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Jackson marshalling -->
@@ -146,12 +152,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>5.2.4.Final</version>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<artifactId>jboss-logging</artifactId>-->
-                    <!--<groupId>org.jboss.logging</groupId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
         </dependency>
 
         <!--logging-->
