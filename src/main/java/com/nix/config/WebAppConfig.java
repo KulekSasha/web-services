@@ -1,5 +1,9 @@
 package com.nix.config;
 
+import org.apache.cxf.Bus;
+import org.apache.cxf.bus.spring.SpringBus;
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import static java.util.Arrays.asList;
 
 @Configuration
 @EnableWebMvc
@@ -37,5 +43,25 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
+
+
+////    Apache CXF
+//    @Bean(name= Bus.DEFAULT_BUS_ID)
+//    public SpringBus springBus() {
+//        SpringBus springBus = new SpringBus();
+//        springBus.setInInterceptors(asList(loggingInInterceptor()));
+//        springBus.setOutInterceptors(asList(loggingOutInterceptor()));
+//        return springBus;
+//    }
+//
+//    @Bean
+//    public LoggingInInterceptor loggingInInterceptor(){
+//        return new LoggingInInterceptor();
+//    }
+//
+//    @Bean
+//    public LoggingOutInterceptor loggingOutInterceptor(){
+//        return new LoggingOutInterceptor();
+//    }
 
 }

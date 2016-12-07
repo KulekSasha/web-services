@@ -1,5 +1,6 @@
 package com.nix.config;
 
+import org.apache.cxf.transport.servlet.CXFServlet;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -33,13 +34,17 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
         super.onStartup(servletContext);
 
-        ServletRegistration.Dynamic servletRegistration = servletContext.addServlet("JerseyServlet",
-                ServletContainer.class.getName());
-        servletRegistration.setLoadOnStartup(1);
-        servletRegistration.addMapping("/api/rest/*");
-        servletRegistration.setInitParameter("javax.ws.rs.Application",
-                JerseyAppConfig.class.getName());
-    }
+        ServletRegistration.Dynamic jerseyServlet =
+                servletContext.addServlet("JerseyServlet", ServletContainer.class.getName());
+        jerseyServlet.setLoadOnStartup(1);
+        jerseyServlet.addMapping("/api/rest/*");
+        jerseyServlet.setInitParameter("javax.ws.rs.Application", JerseyAppConfig.class.getName());
 
+        ServletRegistration.Dynamic cxfServlet =
+                servletContext.addServlet("CxfServlet", CXFServlet.class.getName());
+
+        cxfServlet.addMapping("/api/soap/*");
+
+    }
 
 }

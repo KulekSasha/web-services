@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static String REALM = "MY_TEST_REALM";
+    private static final String REALM = "MY_TEST_REALM";
 
     private UserDetailsService userDetailsService;
 

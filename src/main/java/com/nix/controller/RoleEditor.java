@@ -21,6 +21,6 @@ public class RoleEditor extends PropertyEditorSupport {
             setValue(role);
             return;
         }
-        throw new java.lang.IllegalArgumentException(text);
+        throw new java.lang.IllegalArgumentException("argument is null");
     }
 }

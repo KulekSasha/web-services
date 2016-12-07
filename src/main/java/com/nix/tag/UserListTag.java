@@ -3,6 +3,7 @@ package com.nix.tag;
 import com.nix.model.User;
 import com.nix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -23,6 +24,7 @@ public class UserListTag implements Tag {
     private Tag parent;
 
     @Autowired
+    @Qualifier("userService")
     private UserService userService;
 
     @Override
@@ -92,7 +94,7 @@ public class UserListTag implements Tag {
         try {
             out.print(sb.toString());
         } catch (IOException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
 
         return SKIP_BODY;

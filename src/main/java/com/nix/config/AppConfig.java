@@ -9,13 +9,13 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
-@Import(value = {DaoConfig.class, SecurityConfig.class})
+@Import(value = {DaoConfig.class, SecurityConfig.class, CxfConfig.class})
 @ComponentScan(basePackages = {
         "com.nix.service",
         "com.nix.dao",
         "com.nix.tag",
         "com.nix.controller",
-        "com.nix.api.*",
+        "com.nix.api",
 })
 public class AppConfig {
 

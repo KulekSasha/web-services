@@ -56,7 +56,7 @@ public class UserResource {
 
         return user != null
                 ? Response.ok(user).build()
-                : Response.status(Response.Status.NOT_FOUND).entity("").build();
+                : Response.status(404).entity("").build();
     }
 
     @POST

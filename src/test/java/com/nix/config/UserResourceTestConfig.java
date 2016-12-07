@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -65,10 +64,10 @@ public class UserResourceTestConfig {
     private Properties hibernateProperties() {
         return new Properties() {
             {
-                setProperty("hibernate.cache.use_second_level_cache",
-                        env.getProperty("hibernate.cache.use_second_level_cache"));
                 setProperty("hibernate.cache.use_query_cache",
                         env.getProperty("hibernate.cache.use_query_cache"));
+                setProperty("hibernate.cache.use_second_level_cache",
+                        env.getProperty("hibernate.cache.use_second_level_cache"));
                 setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
                 setProperty("hibernate.max_fetch_depth",
                         env.getProperty("hibernate.max_fetch_depth"));
