@@ -1,6 +1,6 @@
 package com.nix.api.soap;
 
-import com.nix.api.soap.exception.UserWebServiceException;
+import com.nix.api.soap.exception.UserValidationException;
 import com.nix.model.User;
 
 import javax.jws.WebMethod;
@@ -20,7 +20,7 @@ public interface UserWebService {
     User getUserByLogin(@WebParam(name = "login") String login);
 
     //    @WebMethod
-    void createUser(@WebParam(name = "user") User user) throws UserWebServiceException;
+    void createUser(@WebParam(name = "user") User user) throws UserValidationException;
 
     //    @WebMethod
     void updateUser(@WebParam(name = "user") User user);
