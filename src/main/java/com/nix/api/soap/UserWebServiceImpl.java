@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.jws.WebService;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,37 +37,28 @@ public class UserWebServiceImpl implements UserWebService {
     }
 
     @Override
-    public User getUserByLogin(String login) {
+    public User getUserByLogin(String login) throws WebServiceException {
         log.debug("invoke getUserByLogin with login: {}", login);
-        return userService.findByLogin(login);
+        User user = userService.findByLogin(login);
+
+        if (user != null) {
+            return user;
+        } else {
+            throw new WebServiceException("user not found");
+        }
     }
 
     @Override
     public void createUser(User newUser) throws UserValidationException {
-        Set<ConstraintViolation<User>> validate = validator.validate(newUser);
+        Set<ConstraintViolation<User>> violations = validator.validate(newUser);
 
-        if (validate.size() > 0) {
+        if (violations.size() > 0) {
             List<ValidationExceptionDetails> listErrors = new ArrayList<>();
 
-//            SOAPFault fault = SOAPFactory.newInstance().createFault("some fields not valid", new QName("Client.InvalidInput"));
-//            Detail detail = fault.addDetail();
-//
-//            Name detName1 = SOAPFactory.newInstance().createName("detName");
-//            Name detName2 = SOAPFactory.newInstance().createName("detName2");
-//
-//            detail.addDetailEntry(detName1).addTextNode("Error1");
-
-
-            validate.forEach(v -> listErrors.add(
+            violations.forEach(v -> listErrors.add(
                     new ValidationExceptionDetails(v.getPropertyPath().toString(), v.getMessage())));
 
-
-            UserValidationException userWebServiceException = new UserValidationException(listErrors);
-
-//            MyFaultException faultException = new MyFaultException(fault);
-//            faultException.setFaultDetails(listErrors);
-
-            throw userWebServiceException;
+            throw new UserValidationException(listErrors);
         }
 
         userService.create(newUser);
